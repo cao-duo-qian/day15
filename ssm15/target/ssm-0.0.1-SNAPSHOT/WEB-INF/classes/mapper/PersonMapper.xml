@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaoshu.dao.PersonMapper">
+	<select id="findList" parameterType="PersonVo" resultType="PersonVo">
+	SELECT p.*,c.express_name AS cname FROM express_company c ,express_person p 
+	<where>
+	p.express_type_id=c.id
+	<if test="expressName!=null and expressName!=''">
+	and p.express_name like '%${expressName}%'
+	</if>
+	<if test="expressTypeId!=null and expressTypeId!=0">
+	and p.express_type_id = #{expressTypeId}
+	</if>
+	<if test="entryTime1!=null">
+	and p.entry_time &gt;= #{entryTime1}
+	</if>
+	<if test="entryTime2!=null">
+	and p.entry_time &lt;= #{entryTime2}
+	</if>
+	</where>
+	</select>
+	<select id="countPerson" resultType="personVo">
+	SELECT c.express_name AS cname , COUNT(p.id) AS num FROM express_company c LEFT JOIN express_person p ON c.id=p.express_type_id GROUP BY c.id
+	</select>
+</mapper>
